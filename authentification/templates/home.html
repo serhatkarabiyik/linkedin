@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="width: 80vw;">
+    {% if user.is_authenticated %}
+        <h1 class="mb-4 text-center text-success"><i class="fas fa-user-check"></i> Bienvenue {{ user.username }}</h1>
+        
+    {% else %}
+        <h1 class="mb-4 text-center text-warning"><i class="fas fa-user-circle"></i> Bienvenue sur notre plateforme</h1>
+        <p class="lead text-center">Veuillez vous <a href="{% url 'login' %}" class="text-primary">connecter</a> pour accéder a linkedin.</p>
+        <p class="text-center">Pas encore de compte ? <a href="{% url 'register' %}" class="text-primary">Créez-en un ici</a>.</p>
+    {% endif %}
+</div>
+{% endblock %}
