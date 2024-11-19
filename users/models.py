@@ -1,8 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User as AuthUser
 
-class USer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class Profile(models.Model):
+    user = models.OneToOneField(AuthUser, on_delete=models.CASCADE)
     picture = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -11,6 +11,6 @@ class USer(models.Model):
         return f"Profil de {self.user.username}"
 
     class Meta:
-        verbose_name = "User"
-        verbose_name_plural = "Users"
-        ordering = ['-created_at'] 
+        verbose_name = "Profil"
+        verbose_name_plural = "Profils"
+        ordering = ['-created_at']

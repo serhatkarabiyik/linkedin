@@ -8,12 +8,18 @@ class UserRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['last_name', 'first_name', 'email', 'password', 'confirm_password']
+        fields = ['last_name', 'first_name', 'email']
         labels = {
             'last_name': "Nom",
             'first_name': "Prénom",
             'email': "Adresse e-mail",
         }
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("Cette adresse e-mail est déjà utilisée.")
+        return email
 
     def clean(self):
         cleaned_data = super().clean()

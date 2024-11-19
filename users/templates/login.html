@@ -10,8 +10,8 @@
             <form method="post" class="shadow p-4 rounded bg-light">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="text" name="email" class="form-control" id="email" placeholder="Entrez votre email" required>
+                    <label for="username" class="form-label">Email</label>
+                    <input type="email" name="username" class="form-control" id="username" placeholder="Entrez votre email" required>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Mot de passe</label>
@@ -19,11 +19,13 @@
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Connexion</button>
             </form>
-            <p class="text-center mt-3">Vous n'avez pas encore de compte ? <a href="{% url 'register' %}" class="text-primary">Inscrivez-vous</a></p>
+            <p class="text-center mt-3">
+                Vous n'avez pas encore de compte ? <a href="{% url 'register' %}" class="text-primary">Inscrivez-vous</a>
+            </p>
             
-            {% if form.errors %}
+            {% if form.non_field_errors %}
             <div class="alert alert-danger mt-3">
-                {{ form.errors }}
+                {{ form.non_field_errors }}
             </div>
             {% endif %}
         </div>
