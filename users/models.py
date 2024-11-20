@@ -14,3 +14,4 @@ class Profile(models.Model):
         verbose_name = "Profil"
         verbose_name_plural = "Profils"
         ordering = ['-created_at']
+
