@@ -23,7 +23,8 @@ class RegisterView(View):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])  
+            user.set_password(form.cleaned_data['password'])
+            user.username = form.cleaned_data['email']
             user.save()
             Profile.objects.create(user=user)
             login(request, user)  
