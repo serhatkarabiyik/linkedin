@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.views import View
-from .forms import UserRegistrationForm
+from .forms import UserRegistrationForm, ProfileUpdateForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from .models import Profile
@@ -30,3 +30,18 @@ class RegisterView(View):
             login(request, user)  
             return redirect('home')  
         return render(request, 'register.html', {'form': form})
+
+
+class ProfileView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+    def get(self, request):
+        profile, created  = Profile.objects.get_or_create(user=request.user)
+        
+        profile_form = ProfileUpdateForm(instance=profile)
+
+        return render(request, 'profile.html', {
+            'profile_form': profile_form
+        })
+
+    
