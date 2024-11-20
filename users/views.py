@@ -25,7 +25,7 @@ class RegisterView(View):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])  
             user.save()
-            Profile.objects.create(user=user)  # Utilisez Profile ici
+            Profile.objects.create(user=user)
             login(request, user)  
             return redirect('home')  
         return render(request, 'register.html', {'form': form})

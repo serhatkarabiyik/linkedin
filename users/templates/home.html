@@ -3,13 +3,64 @@
 {% block title %}Accueil{% endblock %}
 
 {% block content %}
-<div class="container mt-5" style="width: 80vw;">
+<div class="container mt-5">
     {% if user.is_authenticated %}
-        <h1 class="mb-4 text-center text-success"><i class="fas fa-user-check"></i> Bienvenue {{ user.username }}</h1>
-        
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <img src="{{ user.profile.picture }}" 
+                             alt="Photo de profil" 
+                             class="rounded-circle mb-3" 
+                             style="width: 100px; height: 100px;">
+                        <h5 class="card-title">{{ user.first_name }} {{ user.profile }}</h5>
+                        <p class="text-muted">{{ user.email }}</p>
+                        <hr>
+                        <p><strong>Statistiques :</strong></p>
+                        <ul class="list-unstyled">
+                            <li>Articles publiés : <span class="text-success">12</span></li>
+                            <li>Connexions : <span class="text-primary">45</span></li>
+                        </ul>
+                        <a href="#" class="btn btn-outline-primary btn-sm w-100 mt-3">Voir mon profil</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <textarea class="form-control mb-3" rows="3" placeholder="Partagez une pensée..."></textarea>
+                            <button type="submit" class="btn btn-primary w-100">Publier</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h5 class="text-primary">Fil d'actualités</h5>
+                    <hr>
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-body">
+                            <h6 class="card-title">Titre de l'article</h6>
+                            <p class="card-text">
+                                Voici un aperçu de l'article. Cliquez pour lire plus.
+                            </p>
+                            <a href="#" class="btn btn-sm btn-outline-primary">Lire plus</a>
+                        </div>
+                        <div class="card-footer text-muted text-end">
+                            Publié par John Doe - Il y a 2 heures
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            
+        </div>
     {% else %}
         <h1 class="mb-4 text-center text-warning"><i class="fas fa-user-circle"></i> Bienvenue sur notre plateforme</h1>
-        <p class="lead text-center">Veuillez vous <a href="{% url 'login' %}" class="text-primary">connecter</a> pour accéder a linkedin.</p>
+        <p class="lead text-center">Veuillez vous <a href="{% url 'login' %}" class="text-primary">connecter</a> pour accéder à LinkedIn.</p>
         <p class="text-center">Pas encore de compte ? <a href="{% url 'register' %}" class="text-primary">Créez-en un ici</a>.</p>
     {% endif %}
 </div>
