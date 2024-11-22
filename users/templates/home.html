@@ -18,8 +18,7 @@
                         <hr>
                         <p><strong>Statistiques :</strong></p>
                         <ul class="list-unstyled">
-                            <li>Articles publiés : <span class="text-success">12</span></li>
-                            <li>Connexions : <span class="text-primary">45</span></li>
+                            <li>Articles publiés : <span class="text-success">{{ user_posts_count }}</span></li>
                         </ul>
                         <a href="{% url 'profile' %}" class="btn btn-outline-primary btn-sm w-100 mt-3">Voir mon profil</a>
                     </div>
@@ -29,31 +28,102 @@
             <div class="col-md-6 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <form method="post">
+                        <form method="post" enctype="multipart/form-data"> 
                             {% csrf_token %}
-                            <textarea class="form-control mb-3" rows="3" placeholder="Partagez une pensée..."></textarea>
+                            <textarea name="content" class="form-control mb-3" rows="3" placeholder="Partagez une pensée..."></textarea>
+                            <input type="file" name="picture" class="form-control mb-3" accept="image/*">
                             <button type="submit" class="btn btn-primary w-100">Publier</button>
                         </form>
+                        {% if error_message %}
+                            <p class="text-danger mt-2">{{ error_message }}</p>
+                        {% endif %}
                     </div>
                 </div>
 
                 <div class="mt-4">
                     <h5 class="text-primary">Fil d'actualités</h5>
                     <hr>
-                    <div class="card shadow-sm mb-3">
-                        <div class="card-body">
-                            <h6 class="card-title">Titre de l'article</h6>
-                            <p class="card-text">
-                                Voici un aperçu de l'article. Cliquez pour lire plus.
-                            </p>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Lire plus</a>
-                        </div>
-                        <div class="card-footer text-muted text-end">
-                            Publié par John Doe - Il y a 2 heures
-                        </div>
-                    </div>
+                    {% for post in posts %}
+                        <div class="card shadow-sm mb-3">
+                            <div class="card-body">
+                                <h6 class="card-title">Publié par <a href="{% url 'profile' post.user.id %}">{{ post.user.first_name }}</a> - {{ post.created_at }}.
+                                </h6>
+                                <p class="card-text">{{ post.content }}</p>
+                                {% if post.picture %}
+                                    <img src="{{ MEDIA_URL }}{{ post.picture }}" alt="Image du post" class="img-fluid mt-2">
+                                {% endif %}
+                                <div class="mt-2">
+                                    {% for reaction in post.reaction_set.all %}
+                                        <span class="badge badge-secondary">{{ reaction.get_reaction_display }} par {{ reaction.user.username }}</span>
+                                    {% empty %}
+                                        <p>Aucune réaction pour ce post.</p>
+                                    {% endfor %}
+                                </div>
+                        
+                                <form method="post" action="{% url 'add_reaction' post.id %}">
+                                    {% csrf_token %}
+                                    <div class="btn-group mt-2">
+                                        <button type="submit" name="reaction" value="like" 
+                                                class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-thumbs-up"></i> J'aime
+                                        </button>
+                                        <button type="submit" name="reaction" value="bravo" 
+                                                class="btn btn-outline-success btn-sm">
+                                            <i class="fas fa-check-circle"></i> Bravo
+                                        </button>
+                                        <button type="submit" name="reaction" value="soutien" 
+                                                class="btn btn-outline-info btn-sm ">
+                                            <i class="fas fa-hands-helping"></i> Soutien
+                                        </button>
+                                        <button type="submit" name="reaction" value="j_adore" 
+                                                class="btn btn-outline-danger btn-sm">
+                                            <i class="fas fa-heart"></i> J'adore
+                                        </button>
+                                        <button type="submit" name="reaction" value="instructif" 
+                                                class="btn btn-outline-warning btn-sm">
+                                            <i class="fas fa-lightbulb"></i> Instructif
+                                        </button>
+                                        <button type="submit" name="reaction" value="drôle" 
+                                                class="btn btn-outline-secondary btn-sm">
+                                            <i class="fas fa-laugh"></i> Drôle
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
 
+                            <div class="card-footer text-muted text-end">
+                                <form method="post" action="{% url 'add_comment' post.id %}">
+                                    {% csrf_token %}
+                                    <textarea name="content" class="form-control mt-2" rows="3" placeholder="Écrivez un commentaire..."></textarea>
+                                    <button type="submit" class="btn btn-primary btn-sm mt-2">Commenter</button>
+                                </form>
+                    
+                                <div class="comments mt-4">
+                                    {% for comment in post.comments.all %}
+                                        <div class="comment mb-2">
+                                            <div class="d-flex justify-content-between">
+                                                <strong class="d-flex align-items-center"><a href="{% url 'profile' comment.user.id %}">{{ comment.user.username }}</a></strong>
+                                                {% if comment.user == request.user %}
+                                                    <form method="post" action="{% url 'delete_comment' comment.id %}" style="display:inline;">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                                    </form>
+                                                {% endif %}
+                                            </div>
+
+                                            <p>{{ comment.content }}</p>
+                                            <small class="text-muted">Publié le {{ comment.created_at }}</small>
+                                            
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">Aucune publication pour le moment.</p>
+                    {% endfor %}
                 </div>
+                
             </div>
 
             

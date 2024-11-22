@@ -5,11 +5,26 @@ from .models import Profile
 
 
 class UserRegistrationForm(forms.ModelForm):
-    last_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom'}))
-    first_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prénom'}))
-    email = forms.CharField(required=False, widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))
-    password = forms.CharField(widget=forms.PasswordInput, label="Mot de passe")
-    confirm_password = forms.CharField(widget=forms.PasswordInput, label="Confirmer le mot de passe")
+    last_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom'})
+    )
+    first_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prénom'})
+    )
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'})
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Mot de passe'}),
+        label="Mot de passe"
+    )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirmer le mot de passe'}),
+        label="Confirmer le mot de passe"
+    )
 
     class Meta:
         model = User
@@ -35,14 +50,25 @@ class UserRegistrationForm(forms.ModelForm):
             raise ValidationError("Les mots de passe ne correspondent pas.")
 
         return cleaned_data
-        
 
 
 class ProfileUpdateForm(forms.ModelForm):
-    last_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom'}))
-    first_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prénom'}))
-    email = forms.CharField(required=False, widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))
-    picture = forms.URLField(required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Lien de l\'image'}))
+    last_name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom'})
+    )
+    first_name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prénom'})
+    )
+    email = forms.EmailField(
+        required=False,
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'})
+    )
+    picture = forms.URLField(
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Lien de l'image"})
+    )
 
     class Meta:
         model = Profile
@@ -53,5 +79,3 @@ class ProfileUpdateForm(forms.ModelForm):
             'email': "Adresse e-mail",
             'picture': 'Photo de profil',
         }
-       
-

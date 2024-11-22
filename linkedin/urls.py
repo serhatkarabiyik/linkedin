@@ -17,11 +17,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from users.views import HomeView
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls')),
     path('', HomeView.as_view(), name='home'),
-
+    path('posts/', include('posts.urls')),
+    path('reaction/', include('reaction.urls')),
+    path('comment/', include('comment.urls')),
+    path('skills/', include('skills.urls')),
+    path('experience/', include('experience.urls')),
+    path('connection-requests/', include('connection.urls')),
 ]
+
+
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
